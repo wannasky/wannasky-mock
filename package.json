@@ -1,0 +1,13 @@
+{
+  "name": "@wannasky/mock",
+  "version": "1.0.0",
+  "description": "测试数据生成器",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [
+    "mock"
+  ],
+  "author": "wannasky",
+  "license": "MIT"
+}
