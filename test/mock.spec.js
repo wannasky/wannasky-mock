@@ -1,16 +1,42 @@
-//
-// let template2 = mock.array({
-//     length: 7,
-//     item: mock.object({
-//         flag: mock.random([true, false, 1, 2],true),
-//         name: 'wannasky',
-//         id: mock.index,
-//         array: mock.array({
-//             length: 3,
-//             item: mock.object({
-//                 id: mock.index
-//             })
-//         }),
-//         age: mock.random(20,30, true)
-//     })
-// })
+const {assert} = require('chai');
+
+const mock = require('../index');
+
+describe('mock简单测试', () => {
+
+    let data = mock(mock.object({
+        status: 2000,
+        total: mock.size('list'),
+        list: mock.array({
+            length: mock.random(5, 10),
+            item: mock.object({
+                name: mock.text('name-', mock.index),
+                price: mock.random(100, 1000, true),
+                invoice: mock.random([true, false], true)
+            })
+        })
+    }));
+
+    it('#mock.array()', () => {
+        assert.typeOf(data.list, 'array');
+    });
+
+    it('#mock.object()', () => {
+        assert.typeOf(data.list[0], 'object');
+    });
+
+    it('#mock.size()', () => {
+        assert.equal(data.total, data.list.length);
+    });
+
+    it('#mock.text()', () => {
+        assert.include(data.list[0].name, 'name-');
+    });
+
+    it('#mock.random()', () => {
+        assert.isAtMost(100, data.list[0].price);
+        assert.isBelow(data.list[0].price, 1000);
+        assert.isBoolean(data.list[0].invoice);
+        assert.isBoolean(data.list[0].invoice);
+    });
+})

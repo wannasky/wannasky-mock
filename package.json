@@ -1,13 +1,16 @@
 {
   "name": "@wannasky/mock",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "测试数据生成器",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [
     "mock"
   ],
   "author": "wannasky",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.5"
+  }
 }
