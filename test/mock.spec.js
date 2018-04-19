@@ -12,7 +12,8 @@ describe('mock简单测试', () => {
             item: mock.object({
                 name: mock.text('name-', mock.index),
                 price: mock.random(100, 1000, true),
-                invoice: mock.random([true, false], true)
+                invoice: mock.random([true, false], true),
+                parentStatus: mock.parent(2, 'status')
             })
         })
     }));
@@ -38,5 +39,9 @@ describe('mock简单测试', () => {
         assert.isBelow(data.list[0].price, 1000);
         assert.isBoolean(data.list[0].invoice);
         assert.isBoolean(data.list[0].invoice);
+    });
+
+    it('#mock.parent()', () => {
+        assert.equal(data.status,data.list[0].parentStatus);
     });
 })

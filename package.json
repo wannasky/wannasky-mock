@@ -1,6 +1,6 @@
 {
   "name": "@wannasky/mock",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "测试数据生成器",
   "main": "index.js",
   "scripts": {},
@@ -12,5 +12,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.0.5"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5"
   }
 }
