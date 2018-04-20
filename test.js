@@ -10,7 +10,10 @@ let data = mock(mock.object({
                 length: mock.random(1,2),
                 item: mock.object({
                     id: mock.index(2),
-                    dd: mock.parent('id'),
+                    name: mock.parent('id'),
+                    email: mock.email().link('name'), //next version support
+                    idcard: mock.idCard(), //next version support
+                    sex: mock.sex().link('idcard'),  //next version support
                     xx: mock.text('parent name ', mock.parent(0, 'id')),
                 })
             })
