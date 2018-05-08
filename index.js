@@ -187,16 +187,69 @@ const filterCustomKey = function (object) {
     }
 }
 
+//根据arguments数组提取指定变量
+const pickArgs = function (args) {
+    let url,method,template;
+    if(args.length === 1) template = args[0];
+    if(args.length === 2) {
+        if(_.isObject(args[0])){
+            url = args[0].url.toLowerCase();
+            method = args[0].method.toLowerCase();
+        }else{
+            url = args[0].toLowerCase();
+            method = 'get';
+        }
+        template = args[1];
+    }
+    if(args.length === 3){
+        url = args[0].toLowerCase();
+        method = args[1].toLowerCase();
+        template = args[2];
+    }
+
+    return {
+        url,
+        method,
+        template
+    }
+}
+
+let _store = {};
+
 /**
- *
- * @param template
+ * mock
+ * @param {string|Object} args[0]  url或者request对象
+ * @param {string|Object=} args[1] method 默认get
+ * @param {Object} args[2] template
  */
-function mock(template) {
+function mock(...args) {
+    let {url, method, template} = pickArgs(args);
+    if(_store[url] && _store[url][method]) return _store[url][method];
     let result = findFuncAndExc(template);
     result = filterCustomKey(result);
-
     result = findFuncAndExc(result, _.cloneDeep(result));
+    if(url && method){
+        _store[url] = _store[url] || {};
+        _store[url][method] = result;
+    }
     return result;
+}
+
+/**
+ * 缓存获取及处理
+ * @param {string} url request.url
+ * @param {string} method request.method
+ * @param {Function=} next 提取或者修改从cache返回的值
+ * @param {Boolean=} rewrite 是否重写cache
+ * @returns {*|undefined}
+ */
+mock.cache = function(url, method, next, rewrite) {
+    let data = _store[url] && _store[url][method] || undefined;
+    if(next && _.isFunction(next)){
+        data = next(_.cloneDeep(data));
+        if(rewrite && _store[url] && _store[url][method]) _store[url][method] = data;
+    }
+    return data;
 }
 
 /**
@@ -232,6 +285,7 @@ mock.array = function (object) {
     return ret;
 }
 
+//父对象
 mock.parent = function (...args) {
     if (!args.length) return '';
     let deep = 0, key = args[0];

@@ -2,6 +2,46 @@
 
 一个自动化的动态数组生成器
 
+### 使用mock缓存优化请求
+
+mock第一个参数为request对象（有url和method）,或者第一第二个参数为字符串，自己指定url和method
+
+当指定url和method后，mock会缓存mock产生的数据，第二次在调用时直接从缓存返回。
+
+另外可通过mock.cache(url, method[, next, rewrite])来获取缓存的数据，用于做增删改查；next可用来过滤或者修改从缓存中提取的数据; rewrite用来指定是否重写缓存
+
+example：
+
+```javascript
+    let app = express();
+
+    //获取列表数据
+    app.get('/list',(req, res) => {
+        res.json(mock(req, mock.object({   // mock(req, mock.object)、mock('/list', 'get', mock.object)
+            status: 2000,
+            list: mock.array({
+                length: mock.random(5, 10),
+                item: mock.object({
+                    name: mock.text('name-', mock.index),
+                    age: mock.random(15, 35, true)
+                })
+            })
+        })))
+    });
+
+    //更新列表数据
+    app.put('/list', (req, res) => {
+        let index = req.param('index');
+        let newData = mock.cache('/list', 'get', data => {
+            data.list[index].name = 'new-name';
+        }, true); // 这里的true用于更新缓存
+        res.json(newData);
+    });
+
+```
+
+
+
 ### mock.array
 
 定义一个数组
@@ -122,3 +162,6 @@ mock.object({
     })
 })
 ```
+
+### mock.cache(url, method, next, rewrite)
+用于操作缓存， next用于编辑从缓存获取的数据， rewrite用于指定是否用next的返回值重写此缓存

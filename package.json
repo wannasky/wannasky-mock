@@ -1,6 +1,6 @@
 {
   "name": "@wannasky/mock",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "测试数据生成器",
   "main": "index.js",
   "scripts": {},
